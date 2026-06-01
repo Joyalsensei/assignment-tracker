@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Assignment Tracker</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background: linear-gradient(135deg, #8947df 0%, #764ba2 100%);
+                min-height: 100vh;
+                padding: 20px;
+            }
+            .container {
+                max-width: 1000px;
+                margin: 0 auto;
+                background: white;
+                border-radius: 16px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+                padding: 50px;
+            }
+            h1 {
+                color: #333;
+                margin-bottom: 10px;
+                text-align: center;
+                font-size: 2.8em;
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+            .subtitle {
+                text-align: center;
+                color: #999;
+                margin-bottom: 40px;
+                font-size: 14px;
+            }
+            .form-section {
+                background: linear-gradient(135deg, #f5f7fa 0%, #f0f2f5 100%);
+                padding: 30px;
+                border-radius: 12px;
+                margin-bottom: 40px;
+                border-left: 4px solid #667eea;
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.1);
+            }
+            .form-section h2 {
+                color: #333;
+                margin-bottom: 25px;
+                font-size: 1.3em;
+                font-weight: 600;
+            }
+            .form-group {
+                display: grid;
+                grid-template-columns: 2fr 1fr 1.5fr 1fr;
+                gap: 15px;
+                align-items: end;
+            }
+            input[type="text"],
+            input[type="date"] {
+                padding: 12px 15px;
+                border: 2px solid #e0e0e0;
+                border-radius: 8px;
+                font-size: 14px;
+                transition: all 0.3s ease;
+                background: white;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+                width: 100%;
+            }
+            input[type="text"]:focus,
+            input[type="date"]:focus {
+                outline: none;
+                border-color: #667eea;
+                box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1), 0 2px 8px rgba(0, 0, 0, 0.1);
+                background: #fafbfc;
+            }
+            button {
+                padding: 12px 24px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+                width: 100%;
+            }
+            button:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            }
+            button:active {
+                transform: translateY(0);
+            }
+            .assignments-section {
+                margin-top: 30px;
+            }
+            .section-title {
+                color: #333;
+                margin-bottom: 25px;
+                font-size: 1.4em;
+                font-weight: 600;
+            }
+            .stats {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 15px;
+                margin-bottom: 30px;
+            }
+            .stat-card {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                padding: 20px;
+                border-radius: 10px;
+                text-align: center;
+                box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+            }
+            .stat-number {
+                font-size: 2em;
+                font-weight: 700;
+            }
+            .stat-label {
+                font-size: 12px;
+                opacity: 0.9;
+                margin-top: 5px;
+            }
+            .assignments-list {
+                display: grid;
+                gap: 15px;
+            }
+            .assignment-card {
+                background: white;
+                border: 2px solid #f0f0f0;
+                border-radius: 10px;
+                padding: 20px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                transition: all 0.3s ease;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+                border-left: 5px solid #ddd;
+            }
+            .assignment-card:hover {
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+                transform: translateY(-2px);
+            }
+            .assignment-card.urgent {
+                border-left-color: #ff6b6b;
+                background: linear-gradient(to right, rgba(255, 107, 107, 0.05), white);
+            }
+            .assignment-card.soon {
+                border-left-color: #ffd93d;
+                background: linear-gradient(to right, rgba(255, 217, 61, 0.05), white);
+            }
+            .assignment-card.safe {
+                border-left-color: #6bcf7f;
+                background: linear-gradient(to right, rgba(107, 207, 127, 0.05), white);
+            }
+            .assignment-card.done {
+                opacity: 0.6;
+                background: #f0f8ff;
+            }
+            .assignment-card.done .assignment-name {
+                text-decoration: line-through;
+                color: #999;
+            }
+            .assignment-info {
+                flex: 1;
+            }
+            .assignment-name {
+                font-size: 16px;
+                font-weight: 600;
+                color: #333;
+                margin-bottom: 8px;
+            }
+            .assignment-meta {
+                display: flex;
+                gap: 20px;
+                font-size: 13px;
+                color: #666;
+            }
+            .badge {
+                display: inline-block;
+                padding: 4px 12px;
+                border-radius: 20px;
+                font-size: 11px;
+                font-weight: 600;
+                text-transform: uppercase;
+                margin-left: 10px;
+            }
+            .badge.urgent {
+                background: #ff6b6b;
+                color: white;
+            }
+            .badge.soon {
+                background: #ffd93d;
+                color: #333;
+            }
+            .badge.safe {
+                background: #6bcf7f;
+                color: white;
+            }
+            .assignment-actions {
+                display: flex;
+                gap: 10px;
+                align-items: center;
+            }
+            .checkbox {
+                width: 24px;
+                height: 24px;
+                cursor: pointer;
+                accent-color: #667eea;
+            }
+            .btn-delete {
+                background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+                padding: 8px 16px;
+                font-size: 12px;
+                width: auto;
+                box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+            }
+            .btn-delete:hover {
+                box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+            }
+            .empty-state {
+                text-align: center;
+                padding: 60px 20px;
+                color: #999;
+            }
+            .empty-state .emoji {
+                font-size: 48px;
+                margin-bottom: 15px;
+            }
+            .empty-state p {
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
+            @media (max-width: 768px) {
+                .form-group {
+                    grid-template-columns: 1fr;
+                }
+                .stats {
+                    grid-template-columns: 1fr;
+                }
+                .assignment-card {
+                    flex-direction: column;
+                    align-items: flex-start;
+                }
+                .assignment-actions {
+                    width: 100%;
+                    margin-top: 15px;
+                }
+                .container {
+                    padding: 20px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>📚 Assignment Tracker</h1>
+            <p class="subtitle">Stay on top of your deadlines</p>
+
+            <!-- Add Assignment Form -->
+            <div class="form-section">
+                <h2>➕ Add New Assignment</h2>
+                <form method="POST" action="/">
+                    <div class="form-group">
+                        <input type="text" name="assignment_name" placeholder="Assignment name" required>
+                        <input type="text" name="subject" placeholder="Subject" required>
+                        <input type="date" name="due_date" required>
+                        <button type="submit">Add Assignment</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number">{{ assignments | length }}</div>
+                    <div class="stat-label">Total Assignments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">
+                        {{ assignments | selectattr('status', 'equalto', 'urgent') | list | length }}
+                    </div>
+                    <div class="stat-label">Due Soon (≤2 days)</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">
+                        {{ assignments | selectattr('completed', 'equalto', 1) | list | length }}
+                    </div>
+                    <div class="stat-label">Completed</div>
+                </div>
+            </div>
+
+            <!-- Assignments List -->
+            <div class="assignments-section">
+                <h2 class="section-title">Your Assignments</h2>
+
+                {% if assignments %}
+                <div class="assignments-list">
+                    {% for assignment in assignments %}
+                    <div class="assignment-card {{ 'done' if assignment['completed'] else assignment['status'] }}">
+                        <div class="assignment-info">
+                            <div class="assignment-name">
+                                {{ assignment['name'] }}
+                                {% if not assignment['completed'] %}
+                                    <span class="badge {{ assignment['status'] }}">{{ assignment['status'] }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="assignment-meta">
+                                <span>📖 {{ assignment['subject'] }}</span>
+                                <span>📅 Due: {{ assignment['due_date'] }}</span>
+                            </div>
+                        </div>
+                        <div class="assignment-actions">
+                            <!-- Mark complete toggle -->
+                            <form method="POST" action="/toggle/{{ assignment['id'] }}">
+                                <input
+                                    class="checkbox"
+                                    type="checkbox"
+                                    onChange="this.form.submit()"
+                                    {{ 'checked' if assignment['completed'] else '' }}
+                                    title="Mark as done"
+                                >
+                            </form>
+                            <!-- Delete -->
+                            <form method="POST" action="/delete/{{ assignment['id'] }}">
+                                <button class="btn-delete" type="submit" onclick="return confirm('Delete this assignment?')">
+                                    🗑 Delete
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="emoji">🎉</div>
+                    <p>No assignments yet — you're all caught up!</p>
+                    <p>Add one above to get started.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </body>
+</html>
