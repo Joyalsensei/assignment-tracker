@@ -263,18 +263,34 @@
         <div class="container">
             <h1>📚 Assignment Tracker</h1>
             <p class="subtitle">Stay on top of your deadlines</p>
+        <div class="form-section">
+    <h2>Your Name</h2>
+    <p style="color: #666; margin-bottom: 15px; font-size: 13px;">Enter your name to keep your assignments private</p>
+    <input type="text" id="studentNameInput" placeholder="Enter your name" value="{{ student_name }}" style="padding: 10px; border: 1px solid #ddd; border-radius: 6px; width: 200px; margin-bottom: 20px;">
+    <button onclick="switchStudent()" style="margin-left: 10px;">Switch Student</button>
+    
+    <h2 style="margin-top: 30px;">➕ Add New Assignment</h2>
+    <form method="POST" action="/" class="form-group">
+        <input type="hidden" name="student_name" id="studentNameHidden" value="{{ student_name }}">
+        <input type="text" name="assignment_name" placeholder="Enter assignment name" required>
+        <input type="date" name="due_date" required>
+        <input type="text" name="subject" placeholder="Subject (e.g., Math)" required>
+        <button type="submit">Add Assignment</button>
+    </form>
+</div>
 
-            <!-- Add Assignment Form -->
-            <div class="form-section">
-                <h2>➕ Add New Assignment</h2>
-                <form method="POST" action="/">
-                    <div class="form-group">
-                        <input type="text" name="assignment_name" placeholder="Assignment name" required>
-                        <input type="text" name="subject" placeholder="Subject" required>
-                        <input type="date" name="due_date" required>
-                        <button type="submit">Add Assignment</button>
-                    </div>
-                </form>
+<script>
+function switchStudent() {
+    const name = document.getElementById('studentNameInput').value;
+    if (name.trim()) {
+        window.location.href = '/?student=' + encodeURIComponent(name);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('studentNameHidden').value = "{{ student_name }}";
+});
+</script>
             </div>
 
             <!-- Stats Cards -->
