@@ -11,12 +11,10 @@ def get_db_connection():
 
 def init_db():
     conn = get_db_connection()
-    try:
-        conn.execute('''CREATE TABLE IF NOT EXISTS assignments 
-                       (id INTEGER PRIMARY KEY, student_name TEXT, name TEXT, due_date TEXT, subject TEXT, completed INTEGER DEFAULT 0)''')
-        conn.commit()
-    except Exception as e:
-        print(f"DB Error: {e}")
+    conn.execute('''CREATE TABLE IF NOT EXISTS assignments 
+                (id INTEGER PRIMARY KEY, student_name TEXT, name TEXT, due_date TEXT, subject TEXT, completed INTEGER DEFAULT 0)''')
+    conn.commit()
+    
     try:
         conn.execute('ALTER TABLE assignments ADD COLUMN completed INTEGER DEFAULT 0')
         conn.commit()
