@@ -17,9 +17,12 @@ def init_db():
         conn.commit()
     except Exception as e:
         print(f"DB Error: {e}")
-    finally:
-        conn.close()
-
+    try:
+        conn.execute('ALTER TABLE assignments ADD COLUMN completed INTEGER DEFAULT 0')
+        conn.commit()
+    except:
+        pass
+    conn.close()
 init_db()
 
 @app.route('/', methods=['GET', 'POST'])
